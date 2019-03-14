@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class NonceGeneratorService {
+class NonceService {
     private val LOGGER = LoggerFactory.getLogger(this.javaClass)
 
     fun generate(): Nonce {

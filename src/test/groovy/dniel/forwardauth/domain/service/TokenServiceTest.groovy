@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static spock.util.matcher.HamcrestSupport.that
 
-class VerifyTokenServiceTest extends Specification {
+class TokenServiceTest extends Specification {
 
     def "should accept valid token"() {
         given: "a valid JWT token with example values"
@@ -24,7 +24,7 @@ class VerifyTokenServiceTest extends Specification {
         }
 
         and: "a verification token service which is the system under test"
-        VerifyTokenService sut = new VerifyTokenService(decoder)
+        TokenService sut = new TokenService(decoder)
 
         when: "we verify the token"
         def verifiedToken = sut.verify(tokenString, exampleAudience, domain)
@@ -46,7 +46,7 @@ class VerifyTokenServiceTest extends Specification {
         }
 
         and: "a verification token service which is the system under test"
-        VerifyTokenService sut = new VerifyTokenService(decoder)
+        TokenService sut = new TokenService(decoder)
 
         when: "we verify the token"
         sut.verify(tokenString, exampleAudience, domain)

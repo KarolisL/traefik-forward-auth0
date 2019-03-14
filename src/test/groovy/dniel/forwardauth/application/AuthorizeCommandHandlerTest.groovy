@@ -2,8 +2,8 @@ package dniel.forwardauth.application
 
 import dniel.forwardauth.ObjectMother
 import dniel.forwardauth.domain.Token
-import dniel.forwardauth.domain.service.NonceGeneratorService
-import dniel.forwardauth.domain.service.VerifyTokenService
+import dniel.forwardauth.domain.service.NonceService
+import dniel.forwardauth.domain.service.TokenService
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -26,8 +26,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 method)
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -35,10 +35,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.authenticated, is(authenticated))
@@ -71,8 +71,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 method)
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -80,10 +80,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.authenticated, is(authenticated))
@@ -106,8 +106,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 method)
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -115,10 +115,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.authenticated, is(authenticated))
@@ -147,8 +147,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 method)
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -156,10 +156,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.userinfo, hasEntry(key, value))
@@ -181,8 +181,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 method)
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -190,10 +190,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.userinfo, not(hasKey(key)))
@@ -215,8 +215,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 "GET")
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -224,10 +224,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.redirectUrl.toString(), startsWith("https://example.eu.auth0.com/authorize"))
@@ -245,8 +245,8 @@ class AuthorizeCommandHandlerTest extends Specification {
                 "get")
 
 
-        and: "a stub VerifyTokenService that return a valid JWT Token"
-        def verifyTokenService = Stub(VerifyTokenService)
+        and: "a stub TokenService that return a valid JWT Token"
+        def verifyTokenService = Stub(TokenService)
         verifyTokenService.verify(
                 _,
                 _,
@@ -254,10 +254,10 @@ class AuthorizeCommandHandlerTest extends Specification {
 
         and: "a command handler that is the system under test"
         AuthorizeCommandHandler sut = new AuthorizeCommandHandler(
-                ObjectMother.properties, verifyTokenService, new NonceGeneratorService())
+                ObjectMother.properties, verifyTokenService, new NonceService())
 
         when: "we authorize the request"
-        def result = sut.perform(command)
+        def result = sut.handle(command)
 
         then: "we should get a valid response"
         that(result.nonce, not(isEmptyOrNullString()))

@@ -11,6 +11,7 @@ traefik:
     - /var/run/docker.sock:/var/run/docker.sock
     - ./config/traefik.toml:/traefik.toml
 
+
 whoami:
   image: containous/whoami
   labels:
@@ -20,6 +21,14 @@ whoami:
     - "traefik.frontend.auth.forward.address=http://auth.example.test/authorize"
     - "traefik.frontend.auth.forward.authResponseHeaders=X-FORWARDAUTH-NAME, X-FORWARDAUTH-SUB, X-FORWARDAUTH-EMAIL"
 
+
+errors:
+  image: dniel/errors
+  labels:
+    - "traefik.enable=true"
+    - "traefik.port=80"
+    - "traefik.backend=errors"
+
 auth:
   image: dniel/forwardauth
   ports:
@@ -28,6 +37,9 @@ auth:
     - "traefik.frontend.rule=Host:auth.example.test"
     - "traefik.enable=true"
     - "traefik.port=8080"
+    - "traefik.frontend.errors.network.status=400-599"
+    - "traefik.frontend.errors.network.backend=errors"
+    - "traefik.frontend.errors.network.query=/{status}.html"
   volumes:
     - ./config/application.yaml:/config/application.yaml
 

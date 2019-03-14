@@ -37,7 +37,8 @@ class AuthorizeEndpoint(val authorizeCommandHandler: AuthorizeCommandHandler) {
         val idToken = idTokenCookie?.value
 
         val command: AuthorizeCommand = AuthorizeCommand(accessToken, idToken, protocol, host, uri, method)
-        val authorizeResult = authorizeCommandHandler.perform(command)
+        val authorizeResult = authorizeCommandHandler.handle(command)
+
         return when {
             authorizeResult.isAuthenticated -> {
                 val response = Response.ok()

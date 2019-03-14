@@ -4,17 +4,22 @@ import com.auth0.jwt.interfaces.Claim
 import dniel.forwardauth.AuthProperties
 import dniel.forwardauth.AuthProperties.Application
 import dniel.forwardauth.domain.*
-import dniel.forwardauth.domain.service.NonceGeneratorService
-import dniel.forwardauth.domain.service.VerifyTokenService
+import dniel.forwardauth.domain.service.NonceService
+import dniel.forwardauth.domain.service.TokenService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.net.URI
 
 @Component
 class AuthorizeCommandHandler(val properties: AuthProperties,
-                              val verifyTokenService: VerifyTokenService,
-                              val nonceService: NonceGeneratorService) {
-    private val LOGGER = LoggerFactory.getLogger(this.javaClass)
+                              val verifyTokenService: TokenService,
+                              val nonceService: NonceService) :
+        CommandHandler<AuthorizeCommandHandler.AuthorizeCommand, AuthorizeCommandHandler.AuthorizeResult> {
+
+    companion object {
+        val LOGGER = LoggerFactory.getLogger(this.javaClass)
+    }
+
     private val AUTHORIZE_URL = properties.authorizeUrl
     private val DOMAIN = properties.domain
 
@@ -28,12 +33,7 @@ class AuthorizeCommandHandler(val properties: AuthProperties,
                                        val host: String,
                                        val uri: String,
                                        val method: String
-    )
-
-
-    enum class AuthorizeResultStatus {
-        NEED_AUTHENTICATION, OK, ERROR
-    }
+    ) : Command
 
     /**
      * The result from the Authorization, all return values.
@@ -44,13 +44,13 @@ class AuthorizeCommandHandler(val properties: AuthProperties,
                                       var redirectUrl: URI? = null,
                                       var nonce: Nonce? = null,
                                       var userinfo: Map<String, String> = emptyMap()
-    )
+    ) : CommandResult
 
-    fun perform(params: AuthorizeCommand): AuthorizeResult {
+    override fun handle(command: AuthorizeCommand): AuthorizeResult {
         LOGGER.debug("AuthorizeCommand start")
         return with(AuthorizeResult()) {
-            val app = properties.findApplicationOrDefault(params.host)
-            val originUrl = OriginUrl(params.protocol, params.host, params.uri)
+            val app = properties.findApplicationOrDefault(command.host)
+            val originUrl = OriginUrl(command.protocol, command.host, command.uri)
             LOGGER.debug("Authorize request=${originUrl} to app=${app.name}")
 
             nonce = nonceService.generate()
@@ -58,8 +58,8 @@ class AuthorizeCommandHandler(val properties: AuthProperties,
 
             redirectUrl = AuthorizeUrl(AUTHORIZE_URL, app, state).toURI()
             cookieDomain = app.tokenCookieDomain
-            isAuthenticated = verifyTokens(params, app, this)
-            isRestrictedUrl = isRestrictedUrl(params.method, originUrl, app)
+            isAuthenticated = verifyTokens(command, app, this)
+            isRestrictedUrl = isRestrictedUrl(command.method, originUrl, app)
 
             this
         }.also {

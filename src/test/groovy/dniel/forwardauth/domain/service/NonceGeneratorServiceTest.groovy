@@ -7,7 +7,7 @@ import static spock.util.matcher.HamcrestSupport.that
 
 class NonceGeneratorServiceTest extends Specification {
 
-    NonceGeneratorService sut = new NonceGeneratorService()
+    NonceService sut = new NonceService()
 
     def "should generate a nonce"() {
         given:

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class VerifyTokenService(val decoder: JwtDecoder) {
+class TokenService(val decoder: JwtDecoder) {
     private val LOGGER = LoggerFactory.getLogger(this.javaClass)
 
     fun verify(token: String, expectedAudience: String, domain: String): Token {
