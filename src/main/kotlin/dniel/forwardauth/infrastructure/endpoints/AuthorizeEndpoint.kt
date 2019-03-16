@@ -7,6 +7,14 @@ import org.springframework.stereotype.Component
 import javax.ws.rs.*
 import javax.ws.rs.core.*
 
+/**
+ * This is the REST Endpoint where Traefik asks for authorization for
+ * the user to view the requested url. It is configured as the Forward Authentication
+ * endpoint in Traefik.
+ *
+ * @See /example/traefik.toml for an example of how to configure Traefik for forward authentication.
+ *
+ */
 @Path("authorize")
 @Component
 class AuthorizeEndpoint(val authorizeCommandHandler: AuthorizeCommandHandler) {
@@ -15,8 +23,8 @@ class AuthorizeEndpoint(val authorizeCommandHandler: AuthorizeCommandHandler) {
     /**
      * Authorize Endpoint.
      * This endpoint is used by traefik forward properties to authorize requests.
-     * It will return 200 for requests that has a valid JWT_TOKEN and will
-     * redirect other to authenticate at Auth0.
+     * It will return 200 for requests that has a valid JWT_TOKEN and ACCESS_TOKEN and will
+     * redirect other results to authenticate at Auth0.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
