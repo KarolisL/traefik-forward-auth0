@@ -46,5 +46,5 @@ class AuthApplication(val auth: AuthProperties) : ResourceConfig() {
 }
 
 fun main(args: Array<String>) {
-    val applicationContext = runApplication<AuthApplication>(*args)
+    runApplication<AuthApplication>(*args)
 }
