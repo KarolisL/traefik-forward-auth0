@@ -13,8 +13,8 @@ import javax.ws.rs.core.*
 
 
 /**
- * Callback Endpoint for Auth0 signin to retrieve JWT token from code.
- * TODO rename to signin
+ * OAuth2 Callback Endpoint where ForwardAuth receives user information from Auth0
+ * after the user has Authenticated with Auth0 and authorized to share user information.
  */
 @Path("signin")
 @Component
@@ -23,18 +23,29 @@ class SigninEndpoint(val properties: AuthProperties, val auth0Client: Auth0Servi
     private val DOMAIN = properties.domain
 
     /**
-     * Callback Endpoint
-     * Use Code from signin query parameter to retrieve Token from Auth0 and decode and verify it.
+     * Callback Endpoint.
+     * Handle Callback from Auth0 and perform sign in logic and error handling.
+     *
+     * @param error if something has failed while authentication at Auth0 it will send the error to us.
+     * @param errorDescription a longer description of the error.
+     * @param headers http headers to dump if logging is set to TRACE level for debugging.
+     * @param code is the exchange code for tokens.
+     * @param forwardedHost is the host header set by Traefik when it forwards a requests.
+     * @param nonceCookie the secret nonce to prevent CORS set in browser cookie.
+     * @param state Is state sent while authenticating and should contain the same nonce as the noonce cookie + some more.
+     *
+     * TODO rename the endpoint to callback instead of signin to match OAuth2 better to avoid confusion.
+     *
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    fun signin(@Context headers: HttpHeaders,
-               @QueryParam("code") code: String?,
-               @QueryParam("error_description") errorDescription: String?,
-               @QueryParam("error") error: String?,
-               @QueryParam("state") state: String,
-               @HeaderParam("x-forwarded-host") forwardedHost: String,
-               @CookieParam("AUTH_NONCE") nonceCookie: Cookie): Response {
+    fun callback(@Context headers: HttpHeaders,
+                 @QueryParam("code") code: String?,
+                 @QueryParam("error_description") errorDescription: String?,
+                 @QueryParam("error") error: String?,
+                 @QueryParam("state") state: String,
+                 @HeaderParam("x-forwarded-host") forwardedHost: String,
+                 @CookieParam("AUTH_NONCE") nonceCookie: Cookie): Response {
         if (LOGGER.isTraceEnabled) {
             printHeaders(headers)
         }
@@ -52,7 +63,7 @@ class SigninEndpoint(val properties: AuthProperties, val auth0Client: Auth0Servi
      * @param code is the exchange code for tokens.
      * @param forwardedHost is the host header set by Traefik when it forwards a requests
      * @param nonceCookie the secret nonce to prevent CORS set in browser cookie.
-     * @param state Is state sent whil authenticating and should contain the same nonce as the noonce cookie + some more.
+     * @param state Is state sent while authenticating and should contain the same nonce as the noonce cookie + some more.
      *
      * TODO should extract this method into an application service like I have aready done with AuthorizationCommandHandler
      * so that its easier to write unit tests, separating the code from http/rest technical code into pure application logic.
