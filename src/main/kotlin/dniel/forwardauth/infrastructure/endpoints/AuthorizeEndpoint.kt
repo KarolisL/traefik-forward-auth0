@@ -65,10 +65,9 @@ class AuthorizeEndpoint(val authorizeCommandHandler: AuthorizeCommandHandler) {
                 Response.temporaryRedirect(authorizeResult.redirectUrl).cookie(nonceCookie).build()
             }
 
-            else -> Response.noContent().build()
+            else -> Response.noContent().build() // everything is OK, return 200.
         }
     }
-
 
     private fun printHeaders(headers: HttpHeaders) {
         if (LOGGER.isTraceEnabled) {
