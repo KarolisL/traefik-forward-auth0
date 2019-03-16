@@ -12,7 +12,7 @@ import org.springframework.boot.runApplication
 
 
 /**
- * Main class for ForwardAuth.
+ * Main class for.
  *
  * 8888888888                                                  888        d8888          888    888
  * 888                                                         888       d88888          888    888
