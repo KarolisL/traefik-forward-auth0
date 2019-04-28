@@ -51,7 +51,9 @@ class AuthProperties {
      * Return application with application specific values, default values or inherited values.
      */
     fun findApplicationOrDefault(name: String?): Application {
-        if (name == null) return default;
+        if (name == null){
+            return default
+        };
 
         val application = apps.find() { it.name.equals(name, ignoreCase = true) }
         if (application !== null) {

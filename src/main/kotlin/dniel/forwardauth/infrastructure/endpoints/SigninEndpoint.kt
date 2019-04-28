@@ -44,7 +44,7 @@ class SigninEndpoint(val properties: AuthProperties, val auth0Client: Auth0Servi
                  @QueryParam("error_description") errorDescription: String?,
                  @QueryParam("error") error: String?,
                  @QueryParam("state") state: String,
-                 @HeaderParam("x-forwarded-host") forwardedHost: String,
+                 @HeaderParam("x-forwarded-host") forwardedHost: String?,
                  @CookieParam("AUTH_NONCE") nonceCookie: Cookie): Response {
         if (LOGGER.isTraceEnabled) {
             printHeaders(headers)
@@ -68,7 +68,7 @@ class SigninEndpoint(val properties: AuthProperties, val auth0Client: Auth0Servi
      * TODO should extract this method into an application service like I have aready done with AuthorizationCommandHandler
      * so that its easier to write unit tests, separating the code from http/rest technical code into pure application logic.
      */
-    private fun performSignin(code: String, forwardedHost: String, state: String, nonceCookie: Cookie): Response {
+    private fun performSignin(code: String, forwardedHost: String?, state: String, nonceCookie: Cookie): Response {
         LOGGER.debug("SignIn with code=$code")
         val app = properties.findApplicationOrDefault(forwardedHost)
         val audience = app.audience
