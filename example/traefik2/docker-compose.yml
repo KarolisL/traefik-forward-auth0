@@ -20,6 +20,11 @@ services:
       - "traefik.HTTP.Services.dashboard.LoadBalancer.server.Port=8080"
       - "traefik.http.routers.dashboard.middlewares=my-auth"
 
+  errors:
+    image: dniel/error-pages
+    ports:
+      - 80
+
   whoami:
     image: containous/whoami
     labels:

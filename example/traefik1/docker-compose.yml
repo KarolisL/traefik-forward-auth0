@@ -30,7 +30,7 @@ services:
       - "traefik.frontend.auth.forward.authResponseHeaders=X-FORWARDAUTH-NAME, X-FORWARDAUTH-SUB, X-FORWARDAUTH-EMAIL"
 
   errors:
-    image: guillaumebriday/traefik-custom-error-pages
+    image: dniel/error-pages
     ports:
       - 80
 
