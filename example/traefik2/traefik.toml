@@ -11,10 +11,6 @@ debug = false
      address = ":80"
 
 [providers]
-  # Enable File Provider.
-  [providers.file]
-    filename = "/etc/traefik/traefik2-file.toml"
-
   # Enable Docker Provider.
   [providers.docker]
     filename ="/etc/traefik/traefik2-docker.toml"

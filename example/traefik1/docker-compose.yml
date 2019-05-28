@@ -7,19 +7,32 @@ services:
     image: traefik:v1.7.9-alpine
     ports:
       - 80:80
-      - 8081:8081
+      - 8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/etc/traefik
+    labels:
+      - "traefik.frontend.rule=Host:traefik.example.test"
+      - "traefik.port=8080"
+      - "traefik.enable=true"
+      - "traefik.frontend.auth.forward.address=http://auth.example.test/authorize"
+      - "traefik.frontend.auth.forward.authResponseHeaders=X-FORWARDAUTH-NAME, X-FORWARDAUTH-SUB, X-FORWARDAUTH-EMAIL"
+      - "traefik.frontend.errors.common.status=401,403,404,429,500,503"
+      - "traefik.frontend.errors.common.backend=errors-traefik1"
+      - "traefik.frontend.errors.common.query=/{status}.html"
 
   whoami:
     image: containous/whoami
     labels:
       - "traefik.frontend.rule=Host:whoami.example.test"
       - "traefik.enable=true"
-      - "traefik.port=80"
       - "traefik.frontend.auth.forward.address=http://auth.example.test/authorize"
       - "traefik.frontend.auth.forward.authResponseHeaders=X-FORWARDAUTH-NAME, X-FORWARDAUTH-SUB, X-FORWARDAUTH-EMAIL"
+
+  errors:
+    image: guillaumebriday/traefik-custom-error-pages
+    ports:
+      - 80
 
   auth:
     image: dniel/forwardauth
@@ -31,6 +44,9 @@ services:
       - "traefik.frontend.rule=Host:auth.example.test"
       - "traefik.enable=true"
       - "traefik.port=8080"
+      - "traefik.frontend.errors.common.status=401,403,404,429,500,503"
+      - "traefik.frontend.errors.common.backend=errors-traefik1"
+      - "traefik.frontend.errors.common.query=/{status}.html"
     volumes:
       - ../../config/application.yaml:/config/application.yaml
 
@@ -39,6 +55,5 @@ services:
     labels:
       - "traefik.frontend.rule=Host:www.example.test"
       - "traefik.enable=true"
-      - "traefik.port=80"
       - "traefik.frontend.auth.forward.address=http://auth.example.test/authorize"
       - "traefik.frontend.auth.forward.authResponseHeaders=X-FORWARDAUTH-NAME, X-FORWARDAUTH-SUB, X-FORWARDAUTH-EMAIL"
