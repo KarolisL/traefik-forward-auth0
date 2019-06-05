@@ -33,6 +33,9 @@ services:
     image: dniel/error-pages
     ports:
       - 80
+    labels:
+      - "traefik.enable=true"
+
 
   auth:
     image: dniel/forwardauth
