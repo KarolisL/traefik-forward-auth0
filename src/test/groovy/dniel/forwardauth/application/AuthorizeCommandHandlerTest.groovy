@@ -45,17 +45,18 @@ class AuthorizeCommandHandlerTest extends Specification {
         that(result.isRestrictedUrl, is(restricted))
 
         where:
-        jwt                 | protocol | host               | uri              | method  | authenticated | restricted
-        validJwtTokenString | "HTTPS"  | "www.example.test" | "/test"          | "GET"  || true          | true
-        validJwtTokenString | "HTTPS"  | "www.example.test" | "/oauth2/signin" | "GET"  || true          | false
-        validJwtTokenString | "HTTPS"  | "www.example.test" | "/OaUth2/SiGNIn" | "GET"  || true          | false
-        validJwtTokenString | "HTTPS"  | "opaque.com"       | "/test"          | "GET"  || true          | true
-        validJwtTokenString | "HTTPS"  | "restricted.com"   | "/test"          | "GET"  || true          | false
-        validJwtTokenString | "HTTPS"  | "restricted.com"   | "/test"          | "POST" || true          | true
-        null                | "HTTPS"  | "www.example.test" | "/test"          | "GET"  || false         | true
-        null                | "HTTPS"  | "www.example.test" | "/test"          | "GeT"  || false         | true
-        null                | "HTTPS"  | "www.example.test" | "/test"          | "GeT"  || false         | true
-        null                | "hTTpS"  | "WwW.ExaMplE.TeST" | "/test"          | "GeT"  || false         | true
+        jwt                 | protocol | host               | uri                  | method  | authenticated | restricted
+        validJwtTokenString | "HTTPS"  | "www.example.test" | "/test"              | "GET"  || true          | true
+        validJwtTokenString | "HTTPS"  | "www.example.test" | "/oauth2/signin"     | "GET"  || true          | false
+        validJwtTokenString | "HTTPS"  | "www.example.test" | "/OaUth2/SiGNIn"     | "GET"  || true          | false
+        validJwtTokenString | "HTTPS"  | "opaque.com"       | "/test"              | "GET"  || true          | true
+        validJwtTokenString | "HTTPS"  | "restricted.com"   | "/test"              | "GET"  || true          | false
+        validJwtTokenString | "HTTPS"  | "restricted.com"   | "/test"              | "POST" || true          | true
+        null                | "HTTPS"  | "www.example.test" | "/test"              | "GET"  || false         | true
+        null                | "HTTPS"  | "www.example.test" | "/test"              | "GeT"  || false         | true
+        null                | "HTTPS"  | "www.example.test" | "/test"              | "GeT"  || false         | true
+        null                | "hTTpS"  | "WwW.ExaMplE.TeST" | "/test"              | "GeT"  || false         | true
+        null                | "hTTpS"  | "WwW.ExaMplE.TeST" | "/test?{asdsad)sdf}" | "GeT"  || false         | true
     }
 
 

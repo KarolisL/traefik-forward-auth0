@@ -59,7 +59,8 @@ class SigninEndpoint(val properties: AuthProperties, val auth0Client: Auth0Servi
 
         LOGGER.info("SignInSuccessful, redirect to originUrl originUrl=${decodedState.originUrl}")
         return Response
-                .temporaryRedirect(decodedState.originUrl.uri())
+                .status(Response.Status.TEMPORARY_REDIRECT)
+                .header("location", decodedState.originUrl)
                 .cookie(jwtCookie)
                 .cookie(accessTokenCookie)
                 .cookie(nonceCookie)

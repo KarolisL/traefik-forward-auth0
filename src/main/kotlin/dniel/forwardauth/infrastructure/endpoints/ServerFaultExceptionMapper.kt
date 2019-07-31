@@ -11,7 +11,7 @@ class ServerFaultExceptionMapper : ExceptionMapper<RuntimeException> {
 
     override fun toResponse(exception: RuntimeException?): Response {
         val exceptionMessage = exception?.message ?: "Unknown Message."
-        LOGGER.error("ServerFaultExceptionMapper.toResponse: error=${exceptionMessage}")
+        LOGGER.error("ServerFaultExceptionMapper.toResponse: error=${exceptionMessage}", exception)
         return Response.serverError().entity("{ \"error\": \"$exceptionMessage\" }").build()
     }
 }
