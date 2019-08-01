@@ -53,17 +53,18 @@ class SigninEndpoint(val properties: AuthProperties, val auth0Client: Auth0Servi
         if (shouldVerifyAccessToken(app)) {
             verifyTokenService.verify(accessToken, audience, DOMAIN)
         }
-        val accessTokenCookie = NewCookie("ACCESS_TOKEN", accessToken, "/", tokenCookieDomain, null, -1, false, true)
-        val jwtCookie = NewCookie("JWT_TOKEN", idToken, "/", tokenCookieDomain, null, -1, false, true)
-        val nonceCookie = NewCookie("AUTH_NONCE", "deleted", "/", tokenCookieDomain, null, 0, false, true)
+        val setAccessTokenCookie = NewCookie("ACCESS_TOKEN", accessToken, "/", tokenCookieDomain, null, -1, false, true)
+        val setJWTCookie = NewCookie("JWT_TOKEN", idToken, "/", tokenCookieDomain, null, -1, false, true)
+        val clearNonceCookue = NewCookie("AUTH_NONCE", "deleted", "/", tokenCookieDomain, null, 0, false, true)
 
-        LOGGER.info("SignInSuccessful, redirect to originUrl originUrl=${decodedState.originUrl}")
+        val originUrl = decodedState.originUrl.toString()
+        LOGGER.info("SignInSuccessful, redirect to requested originUrl=${originUrl}")
         return Response
                 .status(Response.Status.TEMPORARY_REDIRECT)
-                .header("location", decodedState.originUrl)
-                .cookie(jwtCookie)
-                .cookie(accessTokenCookie)
-                .cookie(nonceCookie)
+                .header("location", originUrl)
+                .cookie(setJWTCookie)
+                .cookie(setAccessTokenCookie)
+                .cookie(clearNonceCookue)
                 .build()
     }
 
